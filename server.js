@@ -1,17 +1,29 @@
 const express = require("express");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 const connectDB = require("./src/config/db");
+
+dotenv.config();
+
 const app = express();
-let port = 8080;
 
-app.listen(port, () => {
-    console.log(`app listening on port ${port}`);
-});
+// Middleware
+app.use(express.json());
 
-
-dotenv.config(); 
+// Database
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('Sharehope API is running 🚀');
+// Routes
+app.get("/", (req, res) => {
+    res.send("Sharehope API is running 🚀");
+});
+
+const userRoutes = require("./src/user/user.routes");
+
+app.use("/api/user", userRoutes);
+
+// Server
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
 });

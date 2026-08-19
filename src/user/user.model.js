@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
             trim: true,
         },
         email: {
-            type: Number,
+            type: String,
             required: [true, 'User email is required'],
             trim: true,
         },
@@ -27,4 +27,4 @@ const UserSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model('User', productSchema);
+module.exports = mongoose.model('User', UserSchema);
