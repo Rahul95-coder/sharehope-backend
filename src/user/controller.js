@@ -1,4 +1,4 @@
-const User = require("./user.model")
+const User = require("./model")
 
 
 // @desc    Create a new user

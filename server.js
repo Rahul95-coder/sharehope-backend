@@ -19,9 +19,11 @@ app.get("/", (req, res) => {
     res.send("Sharehope API is running 🚀");
 });
 
-const userRoutes = require("./src/user/user.routes");
+const userRoutes = require("./src/user/routes");
+const authRotes = require("./src/auth/routes")
 
 app.use("/api/user", userRoutes);
+app.use("/api/auth",authRotes)
 
 // Server
 const port = process.env.PORT || 8080;
