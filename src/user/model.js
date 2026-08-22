@@ -74,12 +74,8 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
-    document_key: {
-      type: String,
-    },
-
-    document_url: {
-      type: String,
+    document_id: {
+      type: mongoose.Schema.Types.ObjectId,
     },
 
     is_deleted: {
