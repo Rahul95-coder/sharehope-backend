@@ -8,9 +8,6 @@ const authenticate = (req, res, next) => {
         });
     }
 
-    req.userId = req.session.userId;
-    req.userRole = req.session.role;
-
     next();
 };
 

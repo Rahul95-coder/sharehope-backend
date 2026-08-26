@@ -58,8 +58,6 @@ const signIn = async (req, res) => {
 //@route   POST /api/auth/signup
 const signUp = async (req, res) => {
     console.log("Request comes for sign up")
-    console.log(req.body)
-    console.log(req.file)
     try {
         const { name,
             role,
