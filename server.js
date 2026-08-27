@@ -42,11 +42,11 @@ app.get("/", (req, res) => {
     res.send("Sharehope API is running 🚀");
 });
 
-const userRoutes = require("./src/user/routes");
 const authRoutes = require("./src/auth/routes");
 const donationRoutes = require("./src/donations/routes");
+const adminRoutes = require("./src/admin/routes")
 
-app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/donation",donationRoutes)
 // Server

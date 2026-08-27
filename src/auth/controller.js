@@ -32,6 +32,16 @@ const signIn = async (req, res) => {
             });
         }
 
+        if(user.status === "PENDING"){
+            return res.status(405).json({
+                message: "Your verification is pending please wait."
+            }); 
+        }else if (user.status === "REJECTED"){
+             return res.status(405).json({
+                message: "Your registration application has been rejected by admin."
+            });
+        }
+
         // Create login session
         req.session.userId = user._id;
         req.session.role = user.role;
