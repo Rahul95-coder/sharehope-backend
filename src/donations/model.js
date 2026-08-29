@@ -23,6 +23,16 @@ const donationSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      enum: [
+        "COOKED_FOOD",
+        "PACKAGED_FOOD",
+        "GROCERIES",
+        "FRUITS",
+        "VEGETABLES",
+        "BAKERY",
+        "DAIRY",
+        "OTHER"
+      ],
       trim: true,
     },
 
@@ -56,7 +66,7 @@ const donationSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["PENDING","AVAILABLE", "ACCEPTED", "EXPIRED"],
+      enum: ["PENDING", "AVAILABLE", "ACCEPTED", "EXPIRED"],
       default: "PENDING",
     },
 

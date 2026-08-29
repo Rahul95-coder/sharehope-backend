@@ -45,10 +45,12 @@ app.get("/", (req, res) => {
 const authRoutes = require("./src/auth/routes");
 const donationRoutes = require("./src/donations/routes");
 const adminRoutes = require("./src/admin/routes")
+const publicRoutes = require("./src/public/rotes")
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/donation",donationRoutes)
+app.use("/api/public",publicRoutes)
 // Server
 const port = process.env.PORT || 8080;
 

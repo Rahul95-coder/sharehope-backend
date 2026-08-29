@@ -1,10 +1,9 @@
 const express = require("express");
 const donorAuthenticate = require("../middleware/donorMiddleware");
-const { createDonataion, getAllDonation } = require("./controller");
 const router = express.Router();    
+const {createDonation, getAllDonation} = require("./controller")
 
-
-router.post("/",donorAuthenticate,createDonataion)
+router.post("/",donorAuthenticate,createDonation)
 router.get("/",donorAuthenticate,getAllDonation)
 
 

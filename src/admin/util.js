@@ -1,5 +1,11 @@
 export const validStatus = ["VERIFIED", "PENDING", "REJECTED"];
 export const validRole = ["NGO","DONOR"]
+const validDonationStatuses = [
+    "PENDING",
+    "AVAILABLE",
+    "ACCEPTED",
+    "EXPIRED"
+];
 
 export const validateRole = (role) => {
     if(!role){
@@ -31,3 +37,29 @@ export const validateStatus = (status) => {
 
     return {valid:true}; 
 };
+
+
+
+export const validateDonationStatus = (status) => {
+
+    if (typeof status !== "string" || status.trim() === "") {
+        return {
+            valid: false,
+            statusCode: 400,
+            message: "Donation status is required"
+        };
+    }
+
+    if (!validDonationStatuses.includes(status)) {
+        return {
+            valid: false,
+            statusCode: 400,
+            message: "Invalid donation status"
+        };
+    }
+
+    return {
+        valid: true
+    };
+};
+

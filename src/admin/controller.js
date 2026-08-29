@@ -1,7 +1,8 @@
 const User = require("../user/model")
+const Donation = require("../donations/model")
 const mongoose = require("mongoose");
 const { getGridFSBucket } = require("../config/gridfs");
-const { validateStatus, validateRole } = require("./util");
+const { validateStatus, validateRole, validateDonationStatus } = require("./util");
 
 // @desc   Get document of user for admin
 // @route  GET /api/admin/user/document/fileId
@@ -45,15 +46,17 @@ const getDocument = async (req, res) => {
 const getAllUser = async (req, res) => {
     try {
         const { status , role} = req.query;
-        if(!validateRole(role).valid){
-             return res.status(validationError.statusCode).json({
-                message: validationError.message
+        const validationErrorRole = validateRole(role)
+        if(!validationErrorRole.valid){
+             return res.status(validationErrorRole.statusCode).json({
+                message: validationErrorRole.message
             });
         }
 
-        if (!validateStatus(status).valid) {
-            return res.status(validationError.statusCode).json({
-                message: validationError.message
+        const validationErrorStatus = validateStatus(status)
+        if (!validationErrorStatus.valid) {
+            return res.status(validationErrorStatus.statusCode).json({
+                message: validationErrorStatus.message
             });
         }
 
@@ -96,9 +99,10 @@ const updateUserStatus = async (req, res) => {
             }
      
 
-        if (validateStatus(status)) {
-            return res.status(validationError.statusCode).json({
-                message: validationError.message
+         const validationErrorStatus = validateStatus(status)
+        if (!validationErrorStatus.valid) {
+            return res.status(validationErrorStatus.statusCode).json({
+                message: validationErrorStatus.message
             });
         }
 
@@ -131,8 +135,102 @@ const updateUserStatus = async (req, res) => {
 };
 
 
+
+// @desc   Get all donations for admin by status
+// @route  GET /api/admin/donation?status=status
+const getAllDonations = async (req, res) => {
+    try {
+        const { status } = req.query;
+
+        const validation = validateDonationStatus(status);
+
+        if (!validation.valid) {
+            return res.status(validation.statusCode).json({
+                message: validation.message
+            });
+        }
+
+        const donations = await Donation.find({
+            status: status,
+            is_deleted: false
+        }).populate("donor_id", "name email");
+
+        return res.status(200).json(donations);
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to get donations",
+            error: error.message
+        });
+    }
+};
+
+
+// @desc   Update donation status
+// @route  PUT /api/admin/donation
+//
+// Body:
+// donationId = donation's id
+// status = "AVAILABLE" | "EXPIRED"
+const updateDonationStatus = async (req, res) => {
+    try {
+        const { donationId, status } = req.body;
+
+        if (!donationId || donationId.trim() === "") {
+            return res.status(400).json({
+                message: "Select the donation please"
+            });
+        }
+
+        const validation = validateDonationStatus(status);
+
+        if (!validation.valid) {
+            return res.status(validation.statusCode).json({
+                message: validation.message
+            });
+        }
+
+        const donation = await Donation.findOne({
+            _id: donationId,
+            is_deleted: false
+        });
+
+        if (!donation) {
+            return res.status(404).json({
+                message: "Donation not found"
+            });
+        }
+
+        // Admin can only change a pending donation
+        if (donation.status !== "PENDING") {
+            return res.status(400).json({
+                message: "Only pending donations can be updated"
+            });
+        }
+
+        donation.status = status;
+
+        const updatedDonation = await donation.save();
+
+        return res.status(200).json({
+            message: "Donation status updated successfully",
+            donation: updatedDonation
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to update donation status",
+            error: error.message
+        });
+    }
+};
+
+
+
 module.exports = {
     getDocument,
     getAllUser,
-    updateUserStatus
+    updateUserStatus,
+    getAllDonations,
+    updateDonationStatus
 }
